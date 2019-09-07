@@ -11,12 +11,12 @@ import MobileCoreServices
 import AVFoundation
 import Photos
 
-/*
- AttachmentHandler.shared.showAttachmentActionSheet(vc: self)
- AttachmentHandler.shared.imagePickedBlock = { (image) in
- /* get your image here */
- }
- */
+
+// AttachmentHandler.shared.showAttachmentActionSheet(vc: self)
+// AttachmentHandler.shared.imagePickedBlock = { (image) in
+//  get your image here
+// }
+
 
 
 
@@ -122,7 +122,7 @@ class AttachmentHandler: NSObject{
     func openCamera(){
         if UIImagePickerController.isSourceTypeAvailable(.camera){
             let myPickerController = UIImagePickerController()
-            myPickerController.delegate = self
+            myPickerController.delegate = self.currentVC as! UIImagePickerControllerDelegate & UINavigationControllerDelegate
             myPickerController.sourceType = .camera
             currentVC?.present(myPickerController, animated: true, completion: nil)
         }
@@ -133,7 +133,7 @@ class AttachmentHandler: NSObject{
     func photoLibrary(){
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary){
             let myPickerController = UIImagePickerController()
-            myPickerController.delegate = self
+            myPickerController.delegate = self.currentVC as! UIImagePickerControllerDelegate & UINavigationControllerDelegate
             myPickerController.sourceType = .photoLibrary
             currentVC?.present(myPickerController, animated: true, completion: nil)
         }
@@ -171,15 +171,14 @@ extension AttachmentHandler: UIImagePickerControllerDelegate, UINavigationContro
         currentVC?.dismiss(animated: true, completion: nil)
     }
     
-    
-//    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-//        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-//            self.imagePickedBlock?(image)
-//        } else{
-//            print("Something went wrong in  image")
-//        }
-//        currentVC?.dismiss(animated: true, completion: nil)
-//    }
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            self.imagePickedBlock?(image)
+        } else{
+            print("Something went wrong in  image")
+        }
+        currentVC?.dismiss(animated: true, completion: nil)
+    }
 }
     
 
